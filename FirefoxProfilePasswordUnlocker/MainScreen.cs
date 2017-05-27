@@ -23,6 +23,8 @@ namespace FirefoxProfilePasswordUnlocker
         private void SetDirectoryPath(string path)
         {
             tbDirectoryPath.Text = path;
+
+            DirectoryPathChanged();
         }
 
         public static string GetDefaultFirefoxProfileDirectory
@@ -74,10 +76,18 @@ namespace FirefoxProfilePasswordUnlocker
 
         private void BBrowseFolder_Click(object sender, EventArgs e)
         {
+            string rootdir = Environment.SpecialFolder.MyComputer.ToString();
+
+            if (tbDirectoryPath.Text.Contains(@":\"))
+            {
+                rootdir = tbDirectoryPath.Text;
+            }
+
             FolderBrowserDialog fbd = new FolderBrowserDialog()
             {
                 Description = "Select folder with Firefox profile in it.",
-                RootFolder = Environment.SpecialFolder.MyComputer
+                //RootFolder = Environment.SpecialFolder.MyComputer
+                SelectedPath = rootdir
             };
             if (fbd.ShowDialog() == DialogResult.OK)
             {
@@ -86,9 +96,17 @@ namespace FirefoxProfilePasswordUnlocker
             }
         }
 
-        private void TbDirectoryPath_Changed(object sender, EventArgs e)
+        private void ResetLbProfiles()
         {
+            lbProfiles.Items.Clear();
             lbProfiles.ClearSelected();
+            dgUserCredentials.Enabled = false;
+            dgUserCredentials.Hide();
+        }
+
+        private void DirectoryPathChanged()
+        {
+            ResetLbProfiles();
 
             if (tbDirectoryPath.Text.Contains(@":\"))
             {
@@ -98,10 +116,13 @@ namespace FirefoxProfilePasswordUnlocker
                 {
                     lbProfiles.Items.Add(fi.Name);
                 }
+
+                lbProfiles.SelectionMode = SelectionMode.One;
             }
             else
             {
-                //MessageBox.Show(tbDirectoryPath.Text);
+                lbProfiles.Items.Add("No firefox profile found.");
+                lbProfiles.SelectionMode = SelectionMode.None;
             }
         }
 
@@ -111,8 +132,6 @@ namespace FirefoxProfilePasswordUnlocker
             {
                 dgUserCredentials.Enabled = true;
                 dgUserCredentials.Show();
-
-
             }
             else {
                 dgUserCredentials.Enabled = false;
