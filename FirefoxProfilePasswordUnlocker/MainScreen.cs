@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FirefoxProfilePasswordUnlocker
@@ -57,7 +50,6 @@ namespace FirefoxProfilePasswordUnlocker
 
             if (rbDirectoryDefault.Checked)
             {
-                //tbDirectoryPath.Text = ReadFirefoxProfile;
                 bBrowseFolder.Enabled = false;
                 tbDirectoryPath.Enabled = false;
                 SetDirectoryPath(GetDefaultFirefoxProfileDirectory);
@@ -86,9 +78,9 @@ namespace FirefoxProfilePasswordUnlocker
             FolderBrowserDialog fbd = new FolderBrowserDialog()
             {
                 Description = "Select folder with Firefox profile in it.",
-                //RootFolder = Environment.SpecialFolder.MyComputer
                 SelectedPath = rootdir
             };
+
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 profilePath = fbd.SelectedPath;
@@ -126,22 +118,33 @@ namespace FirefoxProfilePasswordUnlocker
             }
         }
 
-        private void LbProfiles_SelectedIndexChanged(object sender, EventArgs e)
+        private bool LbProfileSelected()
         {
-            if (LbProfileSelected())
+            return lbProfiles.SelectedIndex >= 0;
+        }
+
+        private void SetDgUC(bool on)
+        {
+            if (on)
             {
                 dgUserCredentials.Enabled = true;
                 dgUserCredentials.Show();
             }
-            else {
+            else
+            {
                 dgUserCredentials.Enabled = false;
                 dgUserCredentials.Hide();
             }
         }
 
-        private bool LbProfileSelected()
+        private void LbProfiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            return lbProfiles.SelectedIndex >= 0;
+            SetDgUC(LbProfileSelected());
+
+            Decoder decoder = new Decoder();
+
+            decoder.DecodeBase64();
         }
+
     }
 }
