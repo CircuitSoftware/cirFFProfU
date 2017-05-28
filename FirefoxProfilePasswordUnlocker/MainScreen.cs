@@ -12,6 +12,8 @@ namespace FirefoxProfilePasswordUnlocker
         }
 
         string profilePath = "Choose directory from your pc...";
+        string database = "signons.sqlite";
+        string dbstring;
 
         private void SetDirectoryPath(string path)
         {
@@ -141,10 +143,14 @@ namespace FirefoxProfilePasswordUnlocker
         {
             SetDgUC(LbProfileSelected());
 
-            Decoder decoder = new Decoder();
+            dbstring = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
 
-            decoder.DecodeBase64();
+            if (File.Exists(dbstring))
+            {
+                Decoder decoder = new Decoder();
+
+                dgUserCredentials.DataSource = decoder.Decode(dbstring).Tables[0];
+            }
         }
-
     }
 }
