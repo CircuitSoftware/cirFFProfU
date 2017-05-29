@@ -1,5 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FirefoxProfilePasswordUnlocker
@@ -13,7 +20,8 @@ namespace FirefoxProfilePasswordUnlocker
 
         string profilePath = "Choose directory from your pc...";
         string database = "signons.sqlite";
-        string dbstring;
+        string dbString;
+        DataTable dtCredentials;
 
         private void SetDirectoryPath(string path)
         {
@@ -143,13 +151,17 @@ namespace FirefoxProfilePasswordUnlocker
         {
             SetDgUC(LbProfileSelected());
 
-            dbstring = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
+            dbString = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
 
-            if (File.Exists(dbstring))
+            if (File.Exists(dbString))
             {
                 Decoder decoder = new Decoder();
 
-                dgUserCredentials.DataSource = decoder.Decode(dbstring).Tables[0];
+                dtCredentials = decoder.Decode(dbString).Tables[0];
+
+                dgUserCredentials.DataSource = dtCredentials;
+
+                Console.WriteLine("Data: " + dtCredentials.Rows.Count);
             }
         }
     }
