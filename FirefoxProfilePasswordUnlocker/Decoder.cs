@@ -8,36 +8,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SQLite;
 
 namespace FirefoxProfilePasswordUnlocker
 {
     public class Decoder
     {
-        SQLiteConnection sqlite;
-        SQLiteCommand sqlcmd;
-        string sql;
-
-        public DataSet Decode(string database)
+        public String Decode(string hash)
         {
-            DataSet dataset = new DataSet();
+            string value;
 
-            sqlite = new SQLiteConnection("Data Source="+database+";Version=3");
-            sqlite.Open();
-
-            sql = "select hostname as Website, encryptedUsername as Username, encryptedPassword as Password from moz_logins order by hostname asc";
-
-            sqlcmd = new SQLiteCommand(sql, sqlite);
-
-            SQLiteDataAdapter sqladapt = new SQLiteDataAdapter(sql, sqlite);
-            sqladapt.Fill(dataset);
-
-            return dataset;
+            value = hash;
+            
+            return value;
         }
 
         public void DecodeBase64()
         {
-            
+
         }
     }
 }

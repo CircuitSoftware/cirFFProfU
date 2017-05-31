@@ -18,6 +18,8 @@ namespace FirefoxProfilePasswordUnlocker
             InitializeComponent();
         }
 
+        SQLite sql = new SQLite();
+        Decoder decoder = new Decoder();
         string profilePath = "Choose directory from your pc...";
         string database = "signons.sqlite";
         string dbString;
@@ -155,13 +157,48 @@ namespace FirefoxProfilePasswordUnlocker
 
             if (File.Exists(dbString))
             {
-                Decoder decoder = new Decoder();
+                string hash;
+                string value;
 
-                dtCredentials = decoder.Decode(dbString).Tables[0];
+                dtCredentials = sql.GetData(dbString).Tables[0];
+
+                int colCount = dtCredentials.Columns.Count;
+                int rowCount = dtCredentials.Rows.Count;
 
                 dgUserCredentials.DataSource = dtCredentials;
 
-                Console.WriteLine("Data: " + dtCredentials.Rows.Count);
+                dgUserCredentials.AutoResizeColumn(0);
+
+                for (int i = 1; i < colCount; i++)
+                {
+                    for (int j = 0; j < rowCount; j++)
+                    {
+                        hash = dtCredentials.Rows[j][i].ToString();
+
+                        switch (i)
+                        {
+                            case 1:
+                                Console.WriteLine("Username: " + hash);
+                                break;
+                            case 2:
+                                Console.WriteLine("Password: " + hash);
+                                break;
+                        }
+
+                        value = decoder.Decode(hash);
+
+                        switch (i)
+                        {
+                            case 1:
+                                Console.WriteLine("Username(decode): " + value);
+                                break;
+                            case 2:
+                                Console.WriteLine("Password(decode): " + value);
+                                break;
+                        }
+                    }
+                }
+                
             }
         }
     }
