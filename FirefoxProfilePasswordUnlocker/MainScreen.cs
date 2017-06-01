@@ -22,7 +22,10 @@ namespace FirefoxProfilePasswordUnlocker
         Decoder decoder = new Decoder();
         string profilePath = "Choose directory from your pc...";
         string database = "signons.sqlite";
+        string keyFile = "key3.db";
         string dbString;
+        string keyPath;
+        string keyString;
         DataTable dtCredentials;
 
         private void SetDirectoryPath(string path)
@@ -155,50 +158,57 @@ namespace FirefoxProfilePasswordUnlocker
 
             dbString = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
 
-            if (File.Exists(dbString))
+            keyPath = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + keyFile;
+
+
+            if (File.Exists(dbString) && File.Exists(keyPath))
             {
-                string hash;
-                string value;
+                Decoder decoder = new Decoder();
+                keyString = decoder.GetKey(keyPath);
+
+                Console.WriteLine("Key: " + keyString);
 
                 dtCredentials = sql.GetData(dbString).Tables[0];
 
+                string hash;
+                string value;
                 int colCount = dtCredentials.Columns.Count;
                 int rowCount = dtCredentials.Rows.Count;
+
+                //for (int i = 1; i < colCount; i++)
+                //{
+                //    for (int j = 0; j < rowCount; j++)
+                //    {
+                //        hash = dtCredentials.Rows[j][i].ToString();
+
+                //        switch (i)
+                //        {
+                //            case 1:
+                //                Console.WriteLine($"Username: {hash}");
+                //                break;
+                //            case 2:
+                //                Console.WriteLine($"Password: {hash}");
+                //                break;
+                //        }
+
+                //        value = decoder.Decode(hash);
+
+                //        switch (i)
+                //        {
+                //            case 1:
+                //                Console.WriteLine($"Username(decode): {value}");
+                //                break;
+                //            case 2:
+                //                Console.WriteLine($"Password(decode): {value}");
+                //                break;
+                //        }
+                //    }
+                //}
 
                 dgUserCredentials.DataSource = dtCredentials;
 
                 dgUserCredentials.AutoResizeColumn(0);
 
-                for (int i = 1; i < colCount; i++)
-                {
-                    for (int j = 0; j < rowCount; j++)
-                    {
-                        hash = dtCredentials.Rows[j][i].ToString();
-
-                        switch (i)
-                        {
-                            case 1:
-                                Console.WriteLine("Username: " + hash);
-                                break;
-                            case 2:
-                                Console.WriteLine("Password: " + hash);
-                                break;
-                        }
-
-                        value = decoder.Decode(hash);
-
-                        switch (i)
-                        {
-                            case 1:
-                                Console.WriteLine("Username(decode): " + value);
-                                break;
-                            case 2:
-                                Console.WriteLine("Password(decode): " + value);
-                                break;
-                        }
-                    }
-                }
-                
             }
         }
     }
