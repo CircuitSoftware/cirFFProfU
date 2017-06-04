@@ -156,59 +156,62 @@ namespace FirefoxProfilePasswordUnlocker
         {
             SetDgUC(LbProfileSelected());
 
-            dbString = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
-
-            keyPath = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + keyFile;
-
-
-            if (File.Exists(dbString) && File.Exists(keyPath))
+            if (lbProfiles.SelectedItem != null)
             {
-                Decoder decoder = new Decoder();
-                keyString = decoder.GetKey(keyPath);
+                dbString = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
 
-                Console.WriteLine("Key: " + keyString);
+                keyPath = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + keyFile;
 
-                dtCredentials = sql.GetData(dbString).Tables[0];
 
-                string hash;
-                string value;
-                int colCount = dtCredentials.Columns.Count;
-                int rowCount = dtCredentials.Rows.Count;
+                if (File.Exists(dbString) && File.Exists(keyPath))
+                {
+                    Decoder decoder = new Decoder();
+                    keyString = decoder.GetKey(keyPath);
 
-                //for (int i = 1; i < colCount; i++)
-                //{
-                //    for (int j = 0; j < rowCount; j++)
-                //    {
-                //        hash = dtCredentials.Rows[j][i].ToString();
+                    Console.WriteLine("Key: " + keyString);
 
-                //        switch (i)
-                //        {
-                //            case 1:
-                //                Console.WriteLine($"Username: {hash}");
-                //                break;
-                //            case 2:
-                //                Console.WriteLine($"Password: {hash}");
-                //                break;
-                //        }
+                    dtCredentials = sql.GetData(dbString).Tables[0];
 
-                //        value = decoder.Decode(hash);
+                    string hash;
+                    string value;
+                    int colCount = dtCredentials.Columns.Count;
+                    int rowCount = dtCredentials.Rows.Count;
 
-                //        switch (i)
-                //        {
-                //            case 1:
-                //                Console.WriteLine($"Username(decode): {value}");
-                //                break;
-                //            case 2:
-                //                Console.WriteLine($"Password(decode): {value}");
-                //                break;
-                //        }
-                //    }
-                //}
+                    //for (int i = 1; i < colCount; i++)
+                    //{
+                    //    for (int j = 0; j < rowCount; j++)
+                    //    {
+                    //        hash = dtCredentials.Rows[j][i].ToString();
 
-                dgUserCredentials.DataSource = dtCredentials;
+                    //        switch (i)
+                    //        {
+                    //            case 1:
+                    //                Console.WriteLine($"Username: {hash}");
+                    //                break;
+                    //            case 2:
+                    //                Console.WriteLine($"Password: {hash}");
+                    //                break;
+                    //        }
 
-                dgUserCredentials.AutoResizeColumn(0);
+                    //        value = decoder.Decode(hash);
 
+                    //        switch (i)
+                    //        {
+                    //            case 1:
+                    //                Console.WriteLine($"Username(decode): {value}");
+                    //                break;
+                    //            case 2:
+                    //                Console.WriteLine($"Password(decode): {value}");
+                    //                break;
+                    //        }
+                    //    }
+                    //}
+
+                    dgUserCredentials.DataSource = dtCredentials;
+
+                    dgUserCredentials.AutoResizeColumn(0);
+
+                }
             }
         }
     }
