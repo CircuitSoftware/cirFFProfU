@@ -28,10 +28,14 @@ namespace FirefoxProfilePasswordUnlocker
         string keyString;
         DataTable dtCredentials;
 
+        public static void OutputCmdLine(string descr, string output)
+        {
+            Console.WriteLine(descr + ": " + output);
+        }
+
         private void SetDirectoryPath(string path)
         {
             tbDirectoryPath.Text = path;
-
             DirectoryPathChanged();
         }
 
@@ -159,16 +163,13 @@ namespace FirefoxProfilePasswordUnlocker
             if (lbProfiles.SelectedItem != null)
             {
                 dbString = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + database;
-
                 keyPath = tbDirectoryPath.Text + @"\" + lbProfiles.SelectedItem.ToString() + @"\" + keyFile;
-
 
                 if (File.Exists(dbString) && File.Exists(keyPath))
                 {
                     Decoder decoder = new Decoder();
                     keyString = decoder.GetKey(keyPath);
-
-                    Console.WriteLine("Key: " + keyString);
+                    OutputCmdLine("Final Key", keyString);
 
                     dtCredentials = sql.GetData(dbString).Tables[0];
 
@@ -193,7 +194,9 @@ namespace FirefoxProfilePasswordUnlocker
                     //                break;
                     //        }
 
-                    //        value = decoder.Decode(hash);
+                    hash = "c0846848fe6e3524fdd4a6e3e783cf38";
+                    //hash = dtCredentials.Rows[0][1].ToString();
+                    value = decoder.Decode(hash);
 
                     //        switch (i)
                     //        {
@@ -208,9 +211,7 @@ namespace FirefoxProfilePasswordUnlocker
                     //}
 
                     dgUserCredentials.DataSource = dtCredentials;
-
                     dgUserCredentials.AutoResizeColumn(0);
-
                 }
             }
         }

@@ -23,7 +23,14 @@ namespace FirefoxProfilePasswordUnlocker
             DataSet dataset = new DataSet();
 
             sqlite = new SQLiteConnection("Data Source="+database+";Version=3");
-            sqlite.Open();
+            try
+            {
+                sqlite.Open();
+            }
+            catch (SQLiteException e)
+            {
+                Console.WriteLine("SQLite Exception: " + e.Message);
+            }
 
             sql = "select hostname as Website, encryptedUsername as Username, encryptedPassword as Password from moz_logins order by hostname asc";
 
