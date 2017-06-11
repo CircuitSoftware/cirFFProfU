@@ -30,21 +30,21 @@ namespace FirefoxProfilePasswordUnlocker
 
         ///////////////////////////
         ///// TESTING PURPOSE /////
-        //string GS = "6069e2a66b738bd4492179a70975d2aa952db20f";
-        //string MP = "";
-        //string ES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
-        //string PES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
-        //string HP, CHP, tk, k1, k2, k, key, iv;
+        string GS = "6069e2a66b738bd4492179a70975d2aa952db20f";
+        string MP = "";
+        string ES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
+        string PES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
+        string HP, CHP, tk, k1, k2, k, key, iv;
         ///////////////////////////
 
         ///////////////////////////
         ///// TESTING PURPOSE /////
-        string GS = "5aac8e0439e8d69ea0fe1bc013cd5af8";
-        string MP = "";
-        string ES =  "1596bb8112652a43e7bdfb2fdc8799e5";
-        string PES = "1596bb8112652a43e7bdfb2fdc8799e500000000";
-        string HP, CHP, tk, k1, k2, k, key, iv;
-        ///////////////////////////
+        //string GS = "5aac8e0439e8d69ea0fe1bc013cd5af8";
+        //string MP = "";
+        //string ES =  "1596bb8112652a43e7bdfb2fdc8799e5";
+        //string PES = "1596bb8112652a43e7bdfb2fdc8799e500000000";
+        //string HP, CHP, tk, k1, k2, k, key, iv;
+        /////////////////////////////
 
         //
         public static string HexStringFromBytes(byte[] bytes)
@@ -186,7 +186,7 @@ namespace FirefoxProfilePasswordUnlocker
                 Console.WriteLine("CryptographicException: " + e.Message);
             }
 
-            return UTF8Encoding.UTF8.GetString(resultArray);
+            return Encoding.UTF8.GetString(resultArray);
         }
     }
 }
