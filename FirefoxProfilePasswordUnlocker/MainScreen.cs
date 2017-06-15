@@ -194,8 +194,8 @@ namespace FirefoxProfilePasswordUnlocker
                     //                break;
                     //        }
 
-                    //hash = "c0846848fe6e3524fdd4a6e3e783cf38";
-                    hash = dtCredentials.Rows[0][1].ToString();
+                    hash = "c0846848fe6e3524fdd4a6e3e783cf38";
+                    //hash = dtCredentials.Rows[0][1].ToString();
                     value = decoder.Decode(hash);
 
                     //        switch (i)

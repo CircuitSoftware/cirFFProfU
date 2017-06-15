@@ -30,21 +30,47 @@ namespace FirefoxProfilePasswordUnlocker
 
         ///////////////////////////
         ///// TESTING PURPOSE /////
-        string GS = "6069e2a66b738bd4492179a70975d2aa952db20f";
-        string MP = "";
-        string ES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
-        string PES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
-        string HP, CHP, tk, k1, k2, k, key, iv;
+        //string GS = "6069e2a66b738bd4492179a70975d2aa952db20f";
+        //string MP = "";
+        //string ES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
+        //string PES = "82f0b7d9c8de052ef0a639ed3a1f8e36580fac8e";
+        //string HP, CHP, tk, k1, k2, k, key, iv;
         ///////////////////////////
 
         ///////////////////////////
         ///// TESTING PURPOSE /////
-        //string GS = "5aac8e0439e8d69ea0fe1bc013cd5af8";
-        //string MP = "";
-        //string ES =  "1596bb8112652a43e7bdfb2fdc8799e5";
-        //string PES = "1596bb8112652a43e7bdfb2fdc8799e500000000";
-        //string HP, CHP, tk, k1, k2, k, key, iv;
+        string GS = "5aac8e0439e8d69ea0fe1bc013cd5af8";
+        string MP = "";
+        string ES = "1596bb8112652a43e7bdfb2fdc8799e5";
+        string PES = "1596bb8112652a43e7bdfb2fdc8799e500000000";
+        string HP, CHP, tk, k1, k2, k, key, iv;
         /////////////////////////////
+
+        //
+        public static string ToHexString(string str)
+        {
+            var sb = new StringBuilder();
+
+            var bytes = Encoding.Unicode.GetBytes(str);
+            foreach (var t in bytes)
+            {
+                sb.Append(t.ToString("X2"));
+            }
+
+            return sb.ToString(); // returns: "48656C6C6F20776F726C64" for "Hello world"
+        }
+
+        //
+        public static string FromHexString(string hexString)
+        {
+            var bytes = new byte[hexString.Length / 2];
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            }
+
+            return Encoding.Unicode.GetString(bytes); // returns: "Hello world" for "48656C6C6F20776F726C64"
+        }
 
         //
         public static string HexStringFromBytes(byte[] bytes)
@@ -125,39 +151,39 @@ namespace FirefoxProfilePasswordUnlocker
             //}
 
             // COMPUTE HASHED PASSWORD
-            HP = GetSha1Hash(GS + MP);
+            string HP = GetSha1Hash(GS + MP);
             MainScreen.OutputCmdLine("HP", HP);
 
             // COMPUTE COMBINES HASHED PASSWORD
-            CHP = GetSha1Hash(HP + ES);
+            string CHP = GetSha1Hash(HP + ES);
             MainScreen.OutputCmdLine("CHP", CHP);
 
             // CREATING BYTE ARRAY FROM CHP
             byte[] CHPKey = HexStringToBytes(CHP);
 
             // CREATING FIRST PART OF THE KEY
-            k1 = GetHmacHash(PES + ES, CHPKey);
+            string k1 = GetHmacHash(PES + ES, CHPKey);
             MainScreen.OutputCmdLine("k1", k1);
 
             // GENERATING TEMPORARY KEY
-            tk = GetHmacHash(PES, CHPKey);
+            string tk = GetHmacHash(PES, CHPKey);
             MainScreen.OutputCmdLine("tk", tk);
 
             // CREATING SECOND PART OF THE KEY
-            k2 = GetHmacHash(tk + ES, CHPKey);
+            string k2 = GetHmacHash(tk + ES, CHPKey);
             MainScreen.OutputCmdLine("k2", k2);
 
             // CREATE KEY
-            k = k1 + k2;
+            string k = k1 + k2;
             MainScreen.OutputCmdLine("k", k);
 
             // KEY
-            key = k.Substring(0, 48);
+            string key = k.Substring(0, 48);
             bKey = HexStringToBytes(key);
             MainScreen.OutputCmdLine("Key", key);
 
             // INITIALIZATION VECTOR
-            iv = k.Substring(64, 16);
+            string iv = k.Substring(64, 16);
             bIV = HexStringToBytes(iv);
             MainScreen.OutputCmdLine("IV", iv);
 
@@ -171,7 +197,8 @@ namespace FirefoxProfilePasswordUnlocker
             TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
 
             //byte[] toDecryptArray = Convert.FromBase64String(hash);
-            byte[] toDecryptArray = HexStringToBytes(hash);
+            //byte[] toDecryptArray = HexStringToBytes(hash);
+            byte[] toDecryptArray = HexStringToBytes(ToHexString(hash));
             //byte[] toDecryptArray = HexStringToByteArray(passwordCheck);
             byte[] resultArray = { 0 };
 
